@@ -4,7 +4,6 @@ import { handleServerAppError, handleServerNetworkError } from "utils/error-util
 import { appActions } from "app/app.reducer";
 import { todolistsActions } from "features/TodolistsList/todolists.reducer";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { clearTasksAndTodolists } from "common/actions/common.actions";
 
 const initialState: TasksStateType = {};
 
@@ -35,12 +34,16 @@ const slice = createSlice({
                 tasks[index] = {...tasks[index], ...action.payload.model};
             }
         },
-        setTasks: (state, action: PayloadAction<{ tasks: Array<TaskType>; todolistId: string }>) => {
-            state[action.payload.todolistId] = action.payload.tasks;
-        },
+        // setTasks: (state, action: PayloadAction<{ tasks: Array<TaskType>; todolistId: string }>) => {
+        //     state[action.payload.todolistId] = action.payload.tasks;
+        // },
     },
+    // когда работаем с санками и коглда стэйт в одном редюсоры, а экшены в другом
     extraReducers: (builder) => {
         builder
+            .addCase(fetchTasks.fulfilled, (state, action) => {
+                state[action.payload.todolistId] = action.payload.tasks;
+            })
             .addCase(todolistsActions.addTodolist, (state, action) => {
                 state[action.payload.todolist.id] = [];
             })
@@ -52,45 +55,26 @@ const slice = createSlice({
                     state[tl.id] = [];
                 });
             })
-            .addCase(fetchTasks.fulfilled, (state, action) => {
-                // state[action.payload.todolistId] = action.payload.tasks
-            });
+        // .addCase(fetchTasks.fulfilled, (state, action) => {
+        //     // state[action.payload.todolistId] = action.payload.tasks
+        // });
     },
 });
 
 
-
-
 // thunks
-const _fetchTasksTC =
-    (todolistId: string): AppThunk =>
-        (dispatch) => {
-            dispatch(appActions.setAppStatus({status: "loading"}));
-            todolistsAPI.getTasks(todolistId).then((res) => {
-                const tasks = res.data.items;
-                dispatch(tasksActions.setTasks({tasks, todolistId}));
-                dispatch(appActions.setAppStatus({status: "succeeded"}));
-            });
-        };
-
 const fetchTasks = createAsyncThunk(
-    'tasks/fetchTasks', (todolistId: string, thunkAPI) => {
-        const { dispatch} = thunkAPI
+    'tasks/fetchTasks',
+    async (todolistId: string, thunkAPI) => {
+        const {dispatch} = thunkAPI
         dispatch(appActions.setAppStatus({status: "loading"}));
-        todolistsAPI.getTasks(todolistId).then((res) => {
-            const tasks = res.data.items;
-            dispatch(tasksActions.setTasks({tasks, todolistId}));
-            dispatch(appActions.setAppStatus({status: "succeeded"}));
-        });
+        const res = await todolistsAPI.getTasks(todolistId)
+        const tasks = res.data.items;
+        dispatch(appActions.setAppStatus({status: "succeeded"}));
+        //added result to extraReducers
+        return {tasks, todolistId}
     }
 )
-
-
-// export const tasksReducer = slice.reducer;
-// export const tasksActions = slice.actions;
-// export const tasksThunks = {fetchTasks}
-
-
 export const removeTaskTC =
     (taskId: string, todolistId: string): AppThunk =>
         (dispatch) => {
