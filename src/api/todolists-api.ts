@@ -1,4 +1,5 @@
 import axios from "axios";
+import { UpdateDomainTaskModelType } from "features/TodolistsList/tasks.reducer";
 
 const settings = {
   withCredentials: true,
@@ -14,20 +15,17 @@ const instance = axios.create({
 // api
 export const todolistsAPI = {
   getTodolists() {
-    const promise = instance.get<TodolistType[]>("todo-lists");
-    return promise;
+    return instance.get<TodolistType[]>("todo-lists");
   },
   createTodolist(title: string) {
-    const promise = instance.post<ResponseType<{ item: TodolistType }>>("todo-lists", { title: title });
-    return promise;
+    return instance.post<ResponseType<{ item: TodolistType }>>("todo-lists", {title: title});
   },
   deleteTodolist(id: string) {
-    const promise = instance.delete<ResponseType>(`todo-lists/${id}`);
-    return promise;
+    return instance.delete<ResponseType>(`todo-lists/${id}`);
   },
   updateTodolist(id: string, title: string) {
-    const promise = instance.put<ResponseType>(`todo-lists/${id}`, { title: title });
-    return promise;
+    return instance.put<ResponseType>(`todo-lists/${id}`, { title: title });
+
   },
   getTasks(todolistId: string) {
     return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`);
@@ -35,13 +33,25 @@ export const todolistsAPI = {
   deleteTask(todolistId: string, taskId: string) {
     return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`);
   },
-  createTask(todolistId: string, taskTitile: string) {
-    return instance.post<ResponseType<{ item: TaskType }>>(`todo-lists/${todolistId}/tasks`, { title: taskTitile });
+  createTask(arg: AddTaskArg) {
+    return instance.post<ResponseType<{ item: TaskType }>>(`todo-lists/${arg.todolistId}/tasks`, {title: arg.title});
   },
   updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
     return instance.put<ResponseType<TaskType>>(`todo-lists/${todolistId}/tasks/${taskId}`, model);
   },
 };
+
+export type UpdateTaskArg = {
+  taskId: string,
+  domainModel: UpdateDomainTaskModelType,
+  todolistId: string
+}
+
+export type AddTaskArg = {
+  title: string,
+  todolistId: string
+}
+
 
 export type LoginParamsType = {
   email: string;
@@ -52,16 +62,13 @@ export type LoginParamsType = {
 
 export const authAPI = {
   login(data: LoginParamsType) {
-    const promise = instance.post<ResponseType<{ userId?: number }>>("auth/login", data);
-    return promise;
+    return instance.post<ResponseType<{ userId?: number }>>("auth/login", data);
   },
   logout() {
-    const promise = instance.delete<ResponseType<{ userId?: number }>>("auth/login");
-    return promise;
+    return instance.delete<ResponseType<{ userId?: number }>>("auth/login");
   },
   me() {
-    const promise = instance.get<ResponseType<{ id: number; email: string; login: string }>>("auth/me");
-    return promise;
+    return instance.get<ResponseType<{ id: number; email: string; login: string }>>("auth/me");
   },
 };
 
