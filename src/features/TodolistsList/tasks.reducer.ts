@@ -1,11 +1,16 @@
-import { AppThunk } from "app/store";
 import { appActions } from "app/app.reducer";
 import { todolistsActions } from "features/TodolistsList/todolists.reducer";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
 import { TaskPriorities, TaskStatuses } from "common/enums";
 import { tasksApi } from "features/TodolistsList/tasksApi";
-import { AddTaskArg, TaskType, UpdateTaskArg, UpdateTaskModelType } from "features/TodolistsList/tasksApi.types";
+import {
+  AddTaskArg,
+  RemoveTaskArg,
+  TaskType,
+  UpdateTaskArg,
+  UpdateTaskModelType
+} from "features/TodolistsList/tasksApi.types";
 
 const initialState: TasksStateType = {};
 
@@ -13,13 +18,10 @@ const slice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
-    removeTask: (state, action: PayloadAction<{ taskId: string; todolistId: string }>) => {
-      const tasks = state[action.payload.todolistId];
-      const index = tasks.findIndex((t) => t.id === action.payload.taskId);
-      if (index !== -1) tasks.splice(index, 1);
-    }
   },
-  // when we work with thunks and when the state is in one reducer, and the action in another
+  //allows you to create a reducer handler without creating an action
+  // 1. when we work with thunks
+  // 2. when the state is in one reducer, and the action in another
   extraReducers: (builder) => {
     builder
       .addCase(fetchTasks.fulfilled, (state, action) => {
@@ -29,6 +31,12 @@ const slice = createSlice({
       .addCase(addTask.fulfilled, (state, action) => {
         const tasks = state[action.payload.task.todoListId];
         tasks.unshift(action.payload.task);
+      })
+
+      .addCase(removeTask.fulfilled, (state, action) => {
+        const tasks = state[action.payload.todolistId];
+        const index = tasks.findIndex((t) => t.id === action.payload.taskId);
+        if (index !== -1) tasks.splice(index, 1);
       })
 
       .addCase(updateTask.fulfilled, (state, action) => {
@@ -117,7 +125,6 @@ const updateTask = createAppAsyncThunk<UpdateTaskArg, UpdateTaskArg>(
       };
 
       const res = await tasksApi.updateTask(arg.todolistId, arg.taskId, apiModel);
-
       if (res.data.resultCode === 0) {
         // const {todolistId} = res.data.data.
         return { taskId: arg.taskId, domainModel: arg.domainModel, todolistId: arg.todolistId };
@@ -131,19 +138,39 @@ const updateTask = createAppAsyncThunk<UpdateTaskArg, UpdateTaskArg>(
       return rejectWithValue(null);
     }
   });
-
-export const removeTaskTC =
-  (taskId: string, todolistId: string): AppThunk =>
-    (dispatch) => {
-      tasksApi.deleteTask(todolistId, taskId).then(() => {
-        dispatch(tasksActions.removeTask({ taskId, todolistId }));
-      });
-    };
+// export const removeTaskTC =
+//   (taskId: string, todolistId: string): AppThunk =>
+//     (dispatch) => {
+//       tasksApi.deleteTask(todolistId, taskId).then(() => {
+//         dispatch(tasksActions.removeTask({ taskId, todolistId }));
+//       });
+//     };
+const removeTask = createAppAsyncThunk<RemoveTaskArg, RemoveTaskArg>(
+  "tasks/removeTask",
+  async (arg, thunkAPI) => {
+    const { dispatch, rejectWithValue } = thunkAPI;
+    try {
+      dispatch(appActions.setAppStatus({ status: "loading" }));
+      const res = await tasksApi.deleteTask(arg);
+      if (res.data.resultCode === 0) {
+        // dispatch(tasksActions.removeTask({ taskId: arg.taskId, todolistId: arg.todolistId }));
+        dispatch(appActions.setAppStatus({ status: "succeeded" }));
+        return { taskId: arg.taskId, todolistId: arg.todolistId };
+      } else {
+        handleServerAppError(res.data, dispatch);
+        return rejectWithValue(null);
+      }
+    } catch (e) {
+      handleServerNetworkError(e, dispatch);
+      return rejectWithValue(null);
+    }
+  }
+);
 
 export const tasksReducer = slice.reducer;
 export const tasksActions = slice.actions;
 //for export because this safer (will not contact directly)
-export const tasksThunks = { fetchTasks, addTask, updateTask };
+export const tasksThunks = { fetchTasks, addTask, updateTask, removeTask };
 
 // types
 export type UpdateDomainTaskModelType = {

@@ -1,5 +1,5 @@
 import { TaskPriorities, TaskStatuses } from "common/enums";
-import { tasksActions, tasksReducer, TasksStateType, tasksThunks } from "features/TodolistsList/tasks.reducer";
+import { tasksReducer, TasksStateType, tasksThunks } from "features/TodolistsList/tasks.reducer";
 import { todolistsActions } from "features/TodolistsList/todolists.reducer";
 
 let startState: TasksStateType = {};
@@ -85,7 +85,11 @@ beforeEach(() => {
 });
 
 test("correct task should be deleted from correct array", () => {
-  const action = tasksActions.removeTask({ taskId: "2", todolistId: "todolistId2" });
+  const action = tasksThunks.removeTask.fulfilled(
+    { taskId: "2", todolistId: "todolistId2" },
+    "requestId",
+    { taskId: "2", todolistId: "todolistId2" }
+  );
 
   const endState = tasksReducer(startState, action);
 
