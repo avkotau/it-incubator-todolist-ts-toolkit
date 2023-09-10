@@ -1,5 +1,5 @@
 import { appActions } from "app/app.reducer";
-import { todolistsActions } from "features/TodolistsList/todolists.reducer";
+import { todolistsActions, todosThunks } from "features/TodolistsList/todolists.reducer";
 import { createSlice } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
 import { TaskPriorities, TaskStatuses } from "common/enums";
@@ -53,7 +53,7 @@ const slice = createSlice({
       .addCase(todolistsActions.removeTodolist, (state, action) => {
         delete state[action.payload.id];
       })
-      .addCase(todolistsActions.setTodolists, (state, action) => {
+      .addCase(todosThunks.fetchTodos.fulfilled, (state, action) => {
         action.payload.todolists.forEach((tl) => {
           state[tl.id] = [];
         });
