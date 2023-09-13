@@ -2,7 +2,7 @@ import { appActions } from "app/app.reducer";
 import { todolistsActions, todosThunks } from "features/TodolistsList/todolists.reducer";
 import { createSlice } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
-import { TaskPriorities, TaskStatuses } from "common/enums";
+import { ResultCode, TaskPriorities, TaskStatuses } from "common/enums";
 import { tasksApi } from "features/TodolistsList/tasksApi";
 import {
   AddTaskArg,
@@ -50,7 +50,7 @@ const slice = createSlice({
       .addCase(todolistsActions.addTodolist, (state, action) => {
         state[action.payload.todolist.id] = [];
       })
-      .addCase(todolistsActions.removeTodolist, (state, action) => {
+      .addCase(todosThunks.removeTodolist.fulfilled, (state, action) => {
         delete state[action.payload.id];
       })
       .addCase(todosThunks.fetchTodos.fulfilled, (state, action) => {
@@ -87,7 +87,7 @@ const addTask = createAppAsyncThunk<{ task: TaskType }, AddTaskArg>(
     try {
       dispatch(appActions.setAppStatus({ status: "loading" }));
       const res = await tasksApi.createTask(arg);
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === ResultCode.success) {
         const task = res.data.data.item;
         dispatch(appActions.setAppStatus({ status: "succeeded" }));
         return { task };
@@ -125,7 +125,7 @@ const updateTask = createAppAsyncThunk<UpdateTaskArg, UpdateTaskArg>(
       };
 
       const res = await tasksApi.updateTask(arg.todolistId, arg.taskId, apiModel);
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === ResultCode.success) {
         // const {todolistId} = res.data.data.
         return { taskId: arg.taskId, domainModel: arg.domainModel, todolistId: arg.todolistId };
         // return {todolistId: arg.todolistId, taskId: arg.taskId, domainModel: arg.domainModel}
@@ -152,7 +152,7 @@ const removeTask = createAppAsyncThunk<RemoveTaskArg, RemoveTaskArg>(
     try {
       dispatch(appActions.setAppStatus({ status: "loading" }));
       const res = await tasksApi.deleteTask(arg);
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === ResultCode.success) {
         // dispatch(tasksActions.removeTask({ taskId: arg.taskId, todolistId: arg.todolistId }));
         dispatch(appActions.setAppStatus({ status: "succeeded" }));
         return { taskId: arg.taskId, todolistId: arg.todolistId };

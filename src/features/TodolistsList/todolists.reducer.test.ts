@@ -23,7 +23,6 @@ beforeEach(() => {
 
 // test("correct todolist should be removed", () => {
 //   const endState = todosThunks.fetchTodos.fulfilled(startState, todolistsActions.removeTodolist({ id: todolistId1 }));
-//
 //   expect(endState.length).toBe(1);
 //   expect(endState[0].id).toBe(todolistId2);
 // });
@@ -33,7 +32,7 @@ test("correct todolist should be added", () => {
     title: "New Todolist",
     id: "any id",
     addedDate: "",
-    order: 0,
+    order: 0
   };
 
   const endState = todolistsReducer(startState, todolistsActions.addTodolist({ todolist }));
@@ -67,8 +66,8 @@ test("correct filter of todolist should be changed", () => {
 test("todolists should be added", () => {
   const action = todosThunks.fetchTodos.fulfilled(
     { todolists: startState },
-    ''
-    );
+    ""
+  );
 
   const endState = todolistsReducer([], action);
 
