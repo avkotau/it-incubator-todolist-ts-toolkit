@@ -1,5 +1,5 @@
 import { appActions } from "app/app.reducer";
-import { todolistsActions, todosThunks } from "features/TodolistsList/todolists.reducer";
+import { todosThunks } from "features/TodolistsList/todolists.reducer";
 import { createSlice } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
 import { ResultCode, TaskPriorities, TaskStatuses } from "common/enums";
@@ -17,8 +17,7 @@ const initialState: TasksStateType = {};
 const slice = createSlice({
   name: "tasks",
   initialState,
-  reducers: {
-  },
+  reducers: {},
   //allows you to create a reducer handler without creating an action
   // 1. when we work with thunks
   // 2. when the state is in one reducer, and the action in another
@@ -27,18 +26,15 @@ const slice = createSlice({
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state[action.payload.todolistId] = action.payload.tasks;
       })
-
       .addCase(addTask.fulfilled, (state, action) => {
         const tasks = state[action.payload.task.todoListId];
         tasks.unshift(action.payload.task);
       })
-
       .addCase(removeTask.fulfilled, (state, action) => {
         const tasks = state[action.payload.todolistId];
         const index = tasks.findIndex((t) => t.id === action.payload.taskId);
         if (index !== -1) tasks.splice(index, 1);
       })
-
       .addCase(updateTask.fulfilled, (state, action) => {
         const tasks = state[action.payload.todolistId];
         const index = tasks.findIndex((t) => t.id === action.payload.taskId);
@@ -46,8 +42,7 @@ const slice = createSlice({
           tasks[index] = { ...tasks[index], ...action.payload.domainModel };
         }
       })
-
-      .addCase(todolistsActions.addTodolist, (state, action) => {
+      .addCase(todosThunks.addTodolist.fulfilled, (state, action) => {
         state[action.payload.todolist.id] = [];
       })
       .addCase(todosThunks.removeTodolist.fulfilled, (state, action) => {
@@ -126,9 +121,7 @@ const updateTask = createAppAsyncThunk<UpdateTaskArg, UpdateTaskArg>(
 
       const res = await tasksApi.updateTask(arg.todolistId, arg.taskId, apiModel);
       if (res.data.resultCode === ResultCode.success) {
-        // const {todolistId} = res.data.data.
         return { taskId: arg.taskId, domainModel: arg.domainModel, todolistId: arg.todolistId };
-        // return {todolistId: arg.todolistId, taskId: arg.taskId, domainModel: arg.domainModel}
       } else {
         handleServerAppError(res.data, dispatch);
         return rejectWithValue(null);
@@ -138,13 +131,7 @@ const updateTask = createAppAsyncThunk<UpdateTaskArg, UpdateTaskArg>(
       return rejectWithValue(null);
     }
   });
-// export const removeTaskTC =
-//   (taskId: string, todolistId: string): AppThunk =>
-//     (dispatch) => {
-//       tasksApi.deleteTask(todolistId, taskId).then(() => {
-//         dispatch(tasksActions.removeTask({ taskId, todolistId }));
-//       });
-//     };
+
 const removeTask = createAppAsyncThunk<RemoveTaskArg, RemoveTaskArg>(
   "tasks/removeTask",
   async (arg, thunkAPI) => {
