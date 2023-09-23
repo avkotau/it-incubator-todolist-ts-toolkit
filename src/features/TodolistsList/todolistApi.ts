@@ -1,5 +1,5 @@
 import { instance } from "common/api/api";
-import { BaseResponse } from "common/types";
+import { BaseResponseType } from "common/types";
 import { ArgsUpdateTodolist, TodolistType } from "features/TodolistsList/todolistApi.types";
 
 export const todolistApi = {
@@ -7,13 +7,13 @@ export const todolistApi = {
     return instance.get<TodolistType[]>("todo-lists");
   },
   createTodolist(title: string) {
-    return instance.post<BaseResponse<{ item: TodolistType }>>("todo-lists", { title: title });
+    return instance.post<BaseResponseType<{ item: TodolistType }>>("todo-lists", { title: title });
   },
   deleteTodolist(id: string) {
-    return instance.delete<BaseResponse>(`todo-lists/${id}`);
+    return instance.delete<BaseResponseType>(`todo-lists/${id}`);
   },
   updateTodolist(arg: ArgsUpdateTodolist) {
-    return instance.put<BaseResponse>(`todo-lists/${arg.id}`, { title: arg.title });
+    return instance.put<BaseResponseType>(`todo-lists/${arg.id}`, { title: arg.title });
   },
 };
 
