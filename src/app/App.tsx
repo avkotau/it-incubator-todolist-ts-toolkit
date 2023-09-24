@@ -14,12 +14,12 @@ import {
   IconButton,
   LinearProgress,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
-import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { selectIsLoggedIn } from "features/auth/auth.selectors";
 import { selectAppStatus, selectIsInitialized } from "app/app.selectors";
+import { useActions } from "common/hooks/useActions";
 
 type PropsType = {
   demo?: boolean;
@@ -30,14 +30,14 @@ function App({ demo = false }: PropsType) {
   const isInitialized = useSelector(selectIsInitialized);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  const dispatch = useAppDispatch();
+  const { initializeApp, logout } = useActions(authThunks);
 
   useEffect(() => {
-    dispatch(authThunks.initializeApp());
+    initializeApp();
   }, []);
 
   const logoutHandler = useCallback(() => {
-    dispatch(authThunks.logout());
+    logout();
   }, []);
 
   if (!isInitialized) {
