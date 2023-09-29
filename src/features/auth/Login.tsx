@@ -3,18 +3,28 @@ import { FormikHelpers, useFormik } from "formik";
 import { useSelector } from "react-redux";
 import { authThunks } from "features/auth/auth.reducer";
 import { Navigate } from "react-router-dom";
-import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField } from "@mui/material";
 import { selectIsLoggedIn } from "features/auth/auth.selectors";
-import { LoginParamsType } from "features/auth/authApi";
 import { BaseResponseType } from "common/types";
+import { useActions } from "common/hooks/useActions";
 
 export const Login = () => {
-  const dispatch = useAppDispatch();
+  const { login } = useActions(authThunks);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const formik = useFormik({
-    validate: () => {
+    validate: (values) => {
+      const errors: FormikErrorsType = {};
+      if (!values.email) {
+        errors.email = "Email is required";
+      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+        errors.email = "Invalid email address";
+      }
+      if (!values.password) {
+        errors.password = "Password is required";
+      } else if (values.password.length < 3) {
+        errors.password = "Must be 3 characters or more";
+      }
     },
     initialValues: {
       email: "",
@@ -22,12 +32,12 @@ export const Login = () => {
       rememberMe: false
     },
     onSubmit: (values, formikHelpers: FormikHelpers<LoginParamsType>) => {
-      dispatch(authThunks.login(values))
+      login(values)
         .unwrap()
         .catch((error: BaseResponseType) => {
-            error.fieldsErrors?.forEach(fieldError => {
-              formikHelpers.setFieldError(fieldError.field, fieldError.error);
-            });
+          error.fieldsErrors?.forEach(fieldError => {
+            formikHelpers.setFieldError(fieldError.field, fieldError.error);
+          });
         });
     }
   });
@@ -71,3 +81,12 @@ export const Login = () => {
     </Grid>
   );
 };
+
+export type LoginParamsType = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+  captcha?: string;
+};
+
+type FormikErrorsType = Partial<Omit<LoginParamsType, "captcha">>
