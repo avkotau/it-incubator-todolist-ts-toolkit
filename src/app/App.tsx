@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect } from "react";
 import "./App.css";
-import { TodolistsList } from "features/TodolistsList/TodolistsList";
+import { TodolistsList } from "features/TodolistsList/ui/TodolistsList";
 import { ErrorSnackbar } from "common/components/ErrorSnackbar/ErrorSnackbar";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Login } from "features/auth/Login";
-import { authThunks } from "features/auth/auth.reducer";
+import { Login } from "features/auth/ui/login/Login";
+import { authThunks } from "features/auth/model/auth.reducer";
 import {
   AppBar,
   Button,
@@ -17,7 +17,7 @@ import {
   Typography
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
-import { selectIsLoggedIn } from "features/auth/auth.selectors";
+import { selectIsLoggedIn } from "features/auth/model/auth.selectors";
 import { selectAppStatus, selectIsInitialized } from "app/app.selectors";
 import { useActions } from "common/hooks/useActions";
 

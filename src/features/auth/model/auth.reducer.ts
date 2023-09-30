@@ -2,10 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { appActions } from "app/app.reducer";
 import { clearTasksAndTodolists } from "common/actions/common.actions";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError, thunkTryCatch } from "common/utils";
-import { authAPI } from "features/auth/authApi";
+import { authAPI } from "features/auth/api/authApi";
 import { ResultCode } from "common/enums";
 import { BaseResponseType } from "common/types";
-import { LoginParamsType } from "features/auth/Login";
+import { LoginParamsType } from "features/auth/ui/login/Login";
 
 const slice = createSlice({
   name: "auth",

@@ -1,11 +1,10 @@
-import { ActionCreator, ActionCreatorsMapObject, AsyncThunk, bindActionCreators, } from '@reduxjs/toolkit';
-import { useMemo } from 'react';
-import { useAppDispatch } from 'common/hooks/useAppDispatch';
+import { ActionCreator, ActionCreatorsMapObject, AsyncThunk, bindActionCreators } from "@reduxjs/toolkit";
+import { useMemo } from "react";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
 
 export const useActions = <Actions extends ActionCreatorsMapObject = ActionCreatorsMapObject>
 (actions: Actions): BoundActions<Actions> => {
   const dispatch = useAppDispatch();
-
   return useMemo(() => bindActionCreators(actions, dispatch), []);
 };
 

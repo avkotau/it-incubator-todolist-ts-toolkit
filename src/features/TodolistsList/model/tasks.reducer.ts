@@ -1,16 +1,16 @@
 import { appActions } from "app/app.reducer";
-import { todosThunks } from "features/TodolistsList/todolists.reducer";
+import { todosThunks } from "features/TodolistsList/model/todolists.reducer";
 import { createSlice } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError, thunkTryCatch } from "common/utils";
 import { ResultCode, TaskPriorities, TaskStatuses } from "common/enums";
-import { tasksApi } from "features/TodolistsList/tasksApi";
+import { tasksApi } from "features/TodolistsList/model/tasksApi";
 import {
   AddTaskArg,
   RemoveTaskArg,
   TaskType,
   UpdateTaskArg,
   UpdateTaskModelType
-} from "features/TodolistsList/tasksApi.types";
+} from "features/TodolistsList/model/tasksApi.types";
 
 const initialState: TasksStateType = {};
 

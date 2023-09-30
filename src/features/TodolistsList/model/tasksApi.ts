@@ -6,7 +6,7 @@ import {
   RemoveTaskArg,
   TaskType,
   UpdateTaskModelType
-} from "features/TodolistsList/tasksApi.types";
+} from "features/TodolistsList/model/tasksApi.types";
 
 export const tasksApi = {
   getTasks(todolistId: string) {

@@ -1,6 +1,6 @@
 import { instance } from "common/api/api";
 import { BaseResponseType } from "common/types";
-import { ArgsUpdateTodolist, TodolistType } from "features/TodolistsList/todolistApi.types";
+import { ArgsUpdateTodolist, TodolistType } from "features/TodolistsList/model/todolistApi.types";
 
 export const todolistApi = {
   getTodolists() {
