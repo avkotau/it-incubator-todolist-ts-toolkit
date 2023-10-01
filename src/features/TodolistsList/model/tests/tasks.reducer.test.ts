@@ -1,6 +1,6 @@
 import { TaskPriorities, TaskStatuses } from "common/enums";
-import { tasksReducer, TasksStateType, tasksThunks } from "features/TodolistsList/model/tasks.reducer";
-import { todosThunks } from "features/TodolistsList/model/todolists.reducer";
+import { tasksReducer, TasksStateType, tasksThunks } from "features/TodolistsList/model/tasks/tasks.reducer";
+import { todosThunks } from "features/TodolistsList/model/todolists/todolists.reducer";
 
 let startState: TasksStateType = {};
 beforeEach(() => {

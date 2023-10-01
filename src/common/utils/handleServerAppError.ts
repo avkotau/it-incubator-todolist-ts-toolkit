@@ -11,7 +11,9 @@ import { BaseResponseType } from "common/types";
  * @param {boolean} [showError=true] - A flag to determine if the error should be shown. By default, errors are shown.
  * @returns {void} Returns nothing. It's a side effect function to dispatch actions based on the server response.
  */
-export const handleServerAppError = <D>(data: BaseResponseType<D>, dispatch: Dispatch, showError: boolean = true
+export const handleServerAppError = <D>(data: BaseResponseType<D>,
+  dispatch: Dispatch,
+  showError: boolean = true
   ): void => {
     if (showError) {
       if (data.messages.length) {
@@ -20,5 +22,4 @@ export const handleServerAppError = <D>(data: BaseResponseType<D>, dispatch: Dis
         dispatch(appActions.setAppError({ error: "Some error occurred" }));
       }
     }
-    dispatch(appActions.setAppStatus({ status: "failed" }));
   }
