@@ -1,4 +1,5 @@
-import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AnyAction, createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
+import { todosThunks } from "features/TodolistsList/model/todolists/todolists.reducer";
 
 const initialState = {
   status: "idle" as RequestStatusType,
@@ -22,6 +23,7 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      //can use isPanding instead of this addMatcher
       .addMatcher((action: AnyAction) => {
           return action.type.endsWith("/pending");
         },
@@ -31,8 +33,16 @@ const slice = createSlice({
       .addMatcher((action: AnyAction) => {
           return action.type.endsWith("/rejected");
         },
-        (state) => {
+        (state, action) => {
           state.status = "failed";
+
+          if (isAnyOf(todosThunks.addTodolist.rejected)) return;
+
+          if (action.payload) {
+            state.error = action.payload.messages[0];
+          } else {
+            state.error = action.error.message ? action.error.message : "Some error occurred";
+          }
         })
       .addMatcher((action: AnyAction) => {
           return action.type.endsWith("/fulfilled");

@@ -221,16 +221,6 @@ test("tasks should be added for todolist", () => {
     "todolistId"
   );
 
-  //variant 2
-  // type ActionType = {
-  //     type: string
-  //     payload: {tasks: TaskType[], todolistId: string}
-  // }
-  // const action: ActionType = {
-  //     type: tasksThunks.fetchTasks.fulfilled.type,
-  //     payload: {tasks: startState["todolistId1"], todolistId: "todolistId1"}
-  // }
-
   const endState = tasksReducer(
     {
       todolistId2: [],

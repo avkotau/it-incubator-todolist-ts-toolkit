@@ -1,6 +1,6 @@
 import { todosThunks } from "features/TodolistsList/model/todolists/todolists.reducer";
 import { createSlice } from "@reduxjs/toolkit";
-import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError, thunkTryCatch } from "common/utils";
+import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
 import { ResultCode, TaskPriorities, TaskStatuses } from "common/enums";
 import { tasksApi } from "features/TodolistsList/api/tasksApi";
 import {
@@ -75,7 +75,6 @@ const addTask = createAppAsyncThunk<{ task: TaskType }, AddTaskArg>(
   "tasks/addTask",
   async (arg, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI;
-    return thunkTryCatch(thunkAPI, async () => {
       const res = await tasksApi.createTask(arg);
       if (res.data.resultCode === ResultCode.success) {
         const task = res.data.data.item;
@@ -84,7 +83,6 @@ const addTask = createAppAsyncThunk<{ task: TaskType }, AddTaskArg>(
         handleServerAppError(res.data, dispatch, false);
         return rejectWithValue(res.data);
       }
-    });
   });
 
 const updateTask = createAppAsyncThunk<UpdateTaskArg, UpdateTaskArg>(
@@ -95,7 +93,6 @@ const updateTask = createAppAsyncThunk<UpdateTaskArg, UpdateTaskArg>(
       const state = getState();
       const task = state.tasks[arg.todolistId].find((t) => t.id === arg.taskId);
       if (!task) {
-        //throw new Error("task not found in the state");
         console.warn("task not found in the state");
         return rejectWithValue(null);
       }
