@@ -1,9 +1,9 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./app/App";
-import { store } from "./app/store";
+import { store } from "common/store";
 import { Provider } from "react-redux";
+import { App } from "features/App/ui/App";
 
 const root = createRoot(document.getElementById("root") as HTMLElement);
 root.render(

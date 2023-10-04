@@ -1,4 +1,4 @@
-import { RequestStatusType } from "app/app.reducer";
+import { RequestStatusType } from "features/App/model/app.reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { clearTasksAndTodolists } from "common/actions/common.actions";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";

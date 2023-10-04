@@ -1,14 +1,14 @@
-import React, { ChangeEvent, KeyboardEvent, useState } from "react";
+import React, { ChangeEvent, FC, KeyboardEvent, useState } from "react";
 import { IconButton, TextField } from "@mui/material";
 import { AddBox } from "@mui/icons-material";
 import { BaseResponseType } from "common/types";
 
-type AddItemFormPropsType = {
+type Props = {
   addItem: (title: string) => Promise<any>;
   disabled?: boolean;
 };
 
-export const AddItemForm = React.memo(function ({ addItem, disabled = false }: AddItemFormPropsType) {
+export const AddItemForm: FC<Props> = React.memo(function ({ addItem, disabled = false }) {
   let [title, setTitle] = useState("");
   let [error, setError] = useState<string | null>(null);
 

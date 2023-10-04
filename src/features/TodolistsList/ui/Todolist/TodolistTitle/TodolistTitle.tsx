@@ -8,9 +8,7 @@ import { TodolistDomainType, todosThunks } from "features/TodolistsList/model/to
 type Props = {
   todolist: TodolistDomainType;
 };
-export const TodolistTitle: FC<Props> = ({ todolist }) => {
-
-  const { id, title, entityStatus } = todolist;
+export const TodolistTitle: FC<Props> = ({ todolist: {id, title, entityStatus} }) => {
 
   const { changeTodolistTitle, removeTodolist } = useActions(todosThunks);
   const removeTodolistHandler = () => {

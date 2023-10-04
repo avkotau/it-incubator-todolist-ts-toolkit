@@ -1,11 +1,11 @@
-import { AppDispatch, AppRootStateType } from 'app/store';
+import { AppDispatch, AppRootStateType } from 'common/store';
 import { BaseThunkAPI } from '@reduxjs/toolkit/dist/createAsyncThunk';
 import { BaseResponseType} from 'common/types';
 import { handleServerNetworkError } from "common/utils/handleServerNetworkError";
 
 /**
  * A utility function for executing thunk logic within a try-catch block, ensuring
- * consistent app state handling during async operations.
+ * consistent App state handling during async operations.
  *
  * @template T The type of the value that the Promise will resolve to.
  *

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppDispatch, AppRootStateType } from "app/store";
+import { AppDispatch, AppRootStateType } from "common/store";
 import { BaseResponseType } from "common/types";
 
 //createAppAsyncThunk should be used instead createAsyncThunk for type the third argument

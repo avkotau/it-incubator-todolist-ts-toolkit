@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField } from "@mui/material";
-import { useLogin } from "features/auth/lib/useLogin";
+import { useLogin } from "features/Auth/lib/useLogin";
 
 export const Login = () => {
 
