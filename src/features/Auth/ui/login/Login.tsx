@@ -2,10 +2,14 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField } from "@mui/material";
 import { useLogin } from "features/Auth/lib/useLogin";
+import { selectCaptchaUrl } from "features/Auth/model/auth.selectors";
+import { useSelector } from "react-redux";
 
 export const Login = () => {
 
   const { formik, isLoggedIn } = useLogin();
+
+  const captchaUrl = useSelector(selectCaptchaUrl);
 
   if (isLoggedIn) {
     return <Navigate to={"/"} />;
@@ -39,6 +43,18 @@ export const Login = () => {
               <Button type={"submit"} variant={"contained"} color={"primary"}>
                 Login
               </Button>
+              {!!captchaUrl &&
+                <>
+                  <img src={captchaUrl} alt="Captcha" />
+                  <TextField label="Enter the symbols from the picture" type="text"
+                             margin="normal" {...formik.getFieldProps("captcha")} />
+                  {formik.errors.captcha ?
+                    <div style={{ color: "red" }}>{formik.errors.captcha}</div>
+                    :
+                    <div style={{ color: "red" }}>{formik.errors.captcha}</div>
+                  }
+                </>
+              }
             </FormGroup>
           </FormControl>
         </form>
@@ -51,7 +67,7 @@ export type LoginParamsType = {
   email: string;
   password: string;
   rememberMe: boolean;
-  captcha?: string;
+  captcha: string;
 };
 
 

@@ -4,6 +4,7 @@ type FieldErrorType = {
 }
 
 export type BaseResponseType<D = {}> = {
+  url: string
   resultCode: number
   messages: string[]
   data: D

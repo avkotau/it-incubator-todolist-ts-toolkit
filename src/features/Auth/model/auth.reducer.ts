@@ -10,7 +10,8 @@ import { LoginParamsType } from "features/Auth/ui/login/Login";
 const slice = createSlice({
   name: "auth",
   initialState: {
-    isLoggedIn: false
+    isLoggedIn: false,
+    captcha: ''
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -23,11 +24,30 @@ const slice = createSlice({
       })
       .addCase(initializeApp.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload.isLoggedIn;
+      })
+      .addCase(getCaptcha.fulfilled, (state, action) => {
+        debugger
+        state.captcha = action.payload.captcha;
       });
   }
 });
 
 // thunks
+export const getCaptcha = createAppAsyncThunk<{ captcha: string }, undefined>(
+  "Auth/captcha",
+  async (_, thunkAPI) => {
+    const { dispatch, rejectWithValue } = thunkAPI;
+    try {
+      const res = await authAPI.security();
+
+      return { captcha: res.data.url };
+
+    } catch (e) {
+      handleServerNetworkError(e, dispatch);
+      return rejectWithValue(null);
+    }
+  }
+);
 export const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType, {
   rejectValue: BaseResponseType | null
 }>(
@@ -40,6 +60,11 @@ export const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsTyp
         return { isLoggedIn: true };
       } else {
         const isShowAppError = !res.data.fieldsErrors.length;
+
+        if (!!res.data.fieldsErrors.length) {
+          dispatch(getCaptcha());
+        }
+
         handleServerAppError(res.data, dispatch, isShowAppError);
         return rejectWithValue(res.data);
       }

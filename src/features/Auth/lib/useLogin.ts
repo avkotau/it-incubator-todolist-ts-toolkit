@@ -24,12 +24,19 @@ export const useLogin = () => {
       } else if (values.password.length < 3) {
         errors.password = "Must be 3 characters or more";
       }
+      debugger
+
+      if (!values.captcha) {
+        errors.captcha = "Captcha is required";
+      }
     },
     initialValues: {
       email: "",
       password: "",
-      rememberMe: false
+      rememberMe: false,
+      captcha: ''
     },
+
     onSubmit: (values, formikHelpers: FormikHelpers<LoginParamsType>) => {
 
       login(values)
@@ -46,4 +53,4 @@ export const useLogin = () => {
   return { formik, isLoggedIn }
 }
 
-type FormikErrorsType = Partial<Omit<LoginParamsType, "captcha">>
+type FormikErrorsType = Partial<LoginParamsType>
