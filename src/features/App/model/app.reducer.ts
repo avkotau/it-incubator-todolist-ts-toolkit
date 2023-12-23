@@ -33,7 +33,7 @@ const slice = createSlice({
       .addMatcher((action: AnyAction) => {
           return action.type.endsWith("/rejected");
         },
-        (state, action) => {
+        (state, action: AnyAction) => {
           state.status = "failed";
 
           if (isAnyOf(todosThunks.addTodolist.rejected)) return;

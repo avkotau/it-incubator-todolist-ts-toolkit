@@ -39,8 +39,9 @@ export const useLogin = () => {
 
     onSubmit: (values, formikHelpers: FormikHelpers<LoginParamsType>) => {
 
-      login(values)
 
+      login(values)
+        // @ts-ignore
         .unwrap()
         .catch((error: BaseResponseType) => {
           error.fieldsErrors?.forEach(fieldError => {

@@ -34,6 +34,7 @@ export const TodolistsList: FC<Props> = ({ demo = false }) => {
 
   const addTodolistCallback = useCallback((title: string) => {
 
+      // @ts-ignore
       return addTodolist(title).unwrap()
     },
     []
