@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { ErrorSnackbar } from "common/components/ErrorSnackbar/ErrorSnackbar";
 import { useSelector } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 import { authThunks } from "features/Auth/model/auth.reducer";
 import { CircularProgress } from "@mui/material";
 import { selectIsInitialized } from "features/App/model/app.selectors";
@@ -28,12 +28,12 @@ export function App() {
   }
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div>
         <ErrorSnackbar />
         <Header />
         <Routing />
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
