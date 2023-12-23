@@ -26,7 +26,6 @@ const slice = createSlice({
         state.isLoggedIn = action.payload.isLoggedIn;
       })
       .addCase(getCaptcha.fulfilled, (state, action) => {
-        debugger
         state.captcha = action.payload.captcha;
       });
   }
