@@ -30,7 +30,7 @@ export const TodolistsList: FC<Props> = ({ demo = false }) => {
       return;
     }
     fetchTodos();
-  }, []);
+  }, [isLoggedIn]);
 
   const addTodolistCallback = useCallback((title: string) => {
 
